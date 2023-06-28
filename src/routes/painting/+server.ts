@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 import { STABILITY_API_KEY, STABILITY_API_HOST, PAINTING_PROMPT } from '$env/static/private';
 
-export async function GET() {
+export async function GET({ request, platform }) {
 	const engineId = 'stable-diffusion-512-v2-1';
 	const apiHost = STABILITY_API_HOST;
 	const apiKey = STABILITY_API_KEY;
@@ -43,6 +43,8 @@ export async function GET() {
 	}
 
 	const responseJSON = (await response.json()) as GenerationResponse;
+
+	platform?.env?.IMAGES.put(responseJSON.artifacts[0].seed, responseJSON.artifacts[0].base64);
 
 	return json({ base64: responseJSON.artifacts[0].base64 });
 }

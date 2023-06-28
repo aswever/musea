@@ -5,7 +5,12 @@ declare global {
 		// interface Error {}
 		// interface Locals {}
 		// interface PageData {}
-		// interface Platform {}
+		interface Platform {
+			env?: {
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
+				IMAGES: any;
+			};
+		}
 	}
 }
 
