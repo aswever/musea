@@ -2,7 +2,7 @@ import { Direction, type Location, type Walls } from './types';
 import { allDirections } from './directions';
 
 export class Square {
-	public painting: { direction: Direction; url: string } | null = null;
+	public painting: { direction: Direction } | null = null;
 
 	constructor(
 		public location: Location = { x: 0, y: 0 },
@@ -15,19 +15,13 @@ export class Square {
 	) {}
 
 	public removeWall(direction: Direction) {
-		console.log('removing wall', Direction[direction]);
 		this.walls[direction] = false;
-		console.log('walls', this.walls);
 	}
 
 	public addPainting() {
 		const directions = allDirections.filter((direction) => this.walls[direction] === true);
 		const direction = directions[Math.floor(Math.random() * directions.length)];
 		const number = Math.floor(Math.random() * 4 + 1);
-		console.log('adding painting', Direction[direction], number);
-		this.painting = {
-			direction,
-			url: `/cat${number}.png`
-		};
+		this.painting = { direction };
 	}
 }
