@@ -15,8 +15,7 @@
 	},
 	"dependencies": {
 		"aframe": "^1.4.2",
-		"aframe-extras": "^7.0.0",
-		"axios": "^1.4.0"
+		"aframe-extras": "^7.0.0"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
