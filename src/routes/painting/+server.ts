@@ -44,7 +44,16 @@ export async function GET({ request, platform }) {
 
 	const responseJSON = (await response.json()) as GenerationResponse;
 
-	platform?.env?.IMAGES.put(responseJSON.artifacts[0].seed, responseJSON.artifacts[0].base64);
+	try {
+		const result = await platform?.env?.IMAGES.put(
+			responseJSON.artifacts[0].seed,
+			responseJSON.artifacts[0].base64
+		);
+
+		console.log(result);
+	} catch (e) {
+		console.error(e);
+	}
 
 	return json({ base64: responseJSON.artifacts[0].base64 });
 }
