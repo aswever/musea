@@ -1,94 +1,95 @@
-import { allDirections, getOppositeDirection } from './directions';
-import { Direction, type Location } from './types';
-import { Square } from './square';
+import { allDirections, getOppositeDirection } from "./directions";
+import { Direction, type Location } from "./types";
+import { Square } from "./square";
 
 export class Layout {
-	public map: Square[][];
-	private currentLocation: Location;
-	private startLocation: Location;
+  public map: Square[][];
+  private currentLocation: Location;
+  private startLocation: Location;
 
-	constructor(public width = 10, public height = 10) {
-		this.map = new Array(width).fill(null).map(() => new Array(height).fill(null));
-		this.startLocation = {
-			x: Math.floor(Math.random() * width),
-			y: Math.floor(Math.random() * height + 1)
-		};
-		this.map[this.startLocation.x][this.startLocation.y] = new Square(
-			this.positionRelativeToStart(this.startLocation)
-		);
-		this.currentLocation = this.startLocation;
-	}
+  constructor(public width = 10, public height = 10) {
+    this.map = new Array(width).fill(null).map(() => new Array(height).fill(null));
+    this.startLocation = {
+      x: Math.floor(Math.random() * width),
+      y: Math.floor(Math.random() * height + 1),
+    };
+    this.map[this.startLocation.x][this.startLocation.y] = new Square(
+      this.positionRelativeToStart(this.startLocation)
+    );
+    this.currentLocation = this.startLocation;
+  }
 
-	private positionRelativeToStart(location: Location): Location {
-		return {
-			x: location.x - this.startLocation.x,
-			y: location.y - this.startLocation.y
-		};
-	}
+  private positionRelativeToStart(location: Location): Location {
+    return {
+      x: location.x - this.startLocation.x,
+      y: location.y - this.startLocation.y,
+    };
+  }
 
-	public generateMap(totalSquares = 10) {
-		this.addSquareInDirection(Direction.North);
-		for (let i = 0; i < totalSquares; i++) {
-			this.addSquareInRandomDirection();
-		}
-		const currentSquare = this.map[this.currentLocation.x][this.currentLocation.y];
+  public generateMap(totalSquares = 10) {
+    this.addSquareInDirection(Direction.North);
+    for (let i = 0; i < totalSquares; i++) {
+      this.addSquareInRandomDirection();
+    }
+    const currentSquare = this.map[this.currentLocation.x][this.currentLocation.y];
 
-		currentSquare.removeWall(
-			getOppositeDirection(
-				allDirections.filter((direction) => currentSquare.walls[direction] === false)[0]
-			)
-		);
-	}
+    currentSquare.removeWall(
+      getOppositeDirection(
+        allDirections.filter((direction) => currentSquare.walls[direction] === false)[0]
+      )
+    );
+  }
 
-	private addSquareInRandomDirection() {
-		const directions = [Direction.North, Direction.East, Direction.South, Direction.West];
-		const direction = directions[Math.floor(Math.random() * directions.length)];
-		this.addSquareInDirection(direction);
-	}
+  private addSquareInRandomDirection() {
+    const directions = [Direction.North, Direction.East, Direction.South, Direction.West];
+    const direction = directions[Math.floor(Math.random() * directions.length)];
+    this.addSquareInDirection(direction);
+  }
 
-	private addSquareInDirection(direction: Direction) {
-		const newLocation = this.getNewLocation(direction);
-		if (this.isLocationValid(newLocation)) {
-			const currentSquare = this.map[this.currentLocation.x][this.currentLocation.y];
-			currentSquare.removeWall(direction);
-			currentSquare.addPainting();
-			const newSquare = new Square(this.positionRelativeToStart(newLocation));
-			newSquare.removeWall(getOppositeDirection(direction));
-			this.map[newLocation.x][newLocation.y] = newSquare;
-			this.currentLocation = newLocation;
-		}
-	}
+  private addSquareInDirection(direction: Direction) {
+    const newLocation = this.getNewLocation(direction);
+    if (this.isLocationValid(newLocation)) {
+      const currentSquare = this.map[this.currentLocation.x][this.currentLocation.y];
+      currentSquare.removeWall(direction);
+      currentSquare.addPainting();
 
-	private getNewLocation(direction: Direction): Location {
-		switch (direction) {
-			case Direction.North:
-				return { x: this.currentLocation.x, y: this.currentLocation.y - 1 };
-			case Direction.East:
-				return { x: this.currentLocation.x + 1, y: this.currentLocation.y };
-			case Direction.South:
-				return { x: this.currentLocation.x, y: this.currentLocation.y + 1 };
-			case Direction.West:
-				return { x: this.currentLocation.x - 1, y: this.currentLocation.y };
-		}
-	}
+      const newSquare = new Square(this.positionRelativeToStart(newLocation));
+      newSquare.removeWall(getOppositeDirection(direction));
+      this.map[newLocation.x][newLocation.y] = newSquare;
+      this.currentLocation = newLocation;
+    }
+  }
 
-	private isLocationValid(location: Location): boolean {
-		return (
-			location.x >= 0 &&
-			location.x < this.width &&
-			location.y >= 0 &&
-			location.y < this.height &&
-			this.map[location.x][location.y] === null
-		);
-	}
+  private getNewLocation(direction: Direction): Location {
+    switch (direction) {
+      case Direction.North:
+        return { x: this.currentLocation.x, y: this.currentLocation.y - 1 };
+      case Direction.East:
+        return { x: this.currentLocation.x + 1, y: this.currentLocation.y };
+      case Direction.South:
+        return { x: this.currentLocation.x, y: this.currentLocation.y + 1 };
+      case Direction.West:
+        return { x: this.currentLocation.x - 1, y: this.currentLocation.y };
+    }
+  }
 
-	public listSquares(): Square[] {
-		return this.map.flat().filter((square) => square !== null);
-	}
+  private isLocationValid(location: Location): boolean {
+    return (
+      location.x >= 0 &&
+      location.x < this.width &&
+      location.y >= 0 &&
+      location.y < this.height &&
+      this.map[location.x][location.y] === null
+    );
+  }
 
-	static generateLayout(width: number, height: number) {
-		const layout = new Layout(width, height);
-		layout.generateMap();
-		return layout;
-	}
+  public listSquares(): Square[] {
+    return this.map.flat().filter((square) => square !== null);
+  }
+
+  static generateLayout(width: number, height: number) {
+    const layout = new Layout(width, height);
+    layout.generateMap();
+    return layout;
+  }
 }

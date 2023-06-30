@@ -1,15 +1,15 @@
 export type Walls = {
-	[key in Direction]: boolean;
+  [key in Direction]: boolean;
 };
 
 export interface Location {
-	x: number;
-	y: number;
+  x: number;
+  y: number;
 }
 
 export enum Direction {
-	North,
-	East,
-	South,
-	West
+  North,
+  East,
+  South,
+  West,
 }
