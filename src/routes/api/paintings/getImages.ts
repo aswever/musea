@@ -1,5 +1,6 @@
 import { STABILITY_API_KEY, STABILITY_API_HOST, PAINTING_PROMPT } from "$env/static/private";
 import { Buffer } from "buffer";
+import { v4 } from "uuid";
 
 export async function getImages(count: number) {
   const engineId = "stable-diffusion-512-v2-1";
@@ -43,5 +44,8 @@ export async function getImages(count: number) {
   }
 
   const responseJSON = (await response.json()) as GenerationResponse;
-  return responseJSON.artifacts.map((artifact) => Buffer.from(artifact.base64, "base64"));
+  return responseJSON.artifacts.map((artifact) => ({
+    uuid: v4(),
+    image: Buffer.from(artifact.base64, "base64"),
+  }));
 }

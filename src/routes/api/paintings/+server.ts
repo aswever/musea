@@ -1,7 +1,7 @@
 import { json } from "@sveltejs/kit";
 import dayjs from "dayjs";
 import { getImages } from "./getImages.js";
-import { v4 } from "uuid";
+import { IMAGES_HOST } from "$env/static/private";
 
 export async function POST({ platform }) {
   const date = dayjs().format("MM-DD-HH");
@@ -12,7 +12,10 @@ export async function POST({ platform }) {
 
     const paintings = await imageBucket.list({ prefix: `paintings/${date}` });
     if (paintings.objects.length) {
-      throw new Error("Paintings already exist for this hour.");
+      return json({
+        success: true,
+        images: paintings.objects.map((object) => `${IMAGES_HOST}/${object.key}`),
+      });
     }
 
     await imageBucket.put(`paintings/${date}`, "");
@@ -20,13 +23,18 @@ export async function POST({ platform }) {
     const images = await getImages(1);
 
     await Promise.all(
-      images.map((image) => imageBucket.put(`paintings/${date}/${v4()}.png`, image))
+      images.map(({ uuid, image }) => imageBucket.put(`paintings/${date}/${uuid}.png`, image))
     );
+
+    return json({
+      success: true,
+      images: images.map(({ uuid }) => `${IMAGES_HOST}/paintings/${date}/${uuid}.png`),
+    });
   } catch (e) {
     console.error(e);
-    imageBucket?.delete(`paintings/${date}`);
-    return json({ success: false });
-  }
+    await imageBucket?.delete(`paintings/${date}`);
 
-  return json({ success: true });
+    const error = e instanceof Error ? e.message : e;
+    return json({ success: false, error });
+  }
 }
