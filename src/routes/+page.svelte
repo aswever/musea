@@ -9,7 +9,7 @@
   let squares: Square[] = [];
 
   onMount(async () => {
-    const res = await fetch("/map");
+    const res = await fetch("/api/map");
     squares = await res.json();
   });
 </script>

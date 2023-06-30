@@ -2,21 +2,11 @@
   import "aframe";
   import "aframe-extras";
   import { getPositionForDirection, getRotationForDirection } from "./api/map/directions";
-  import { onMount } from "svelte";
   import type { Square } from "./api/map/square";
   import { Direction } from "./api/map/types";
 
   export let square: Square;
   let [x, y] = [square.location.x * 16, square.location.y * 16];
-  export let paintingUrl: string | undefined = undefined;
-
-  onMount(async () => {
-    const paintingRes = await fetch(`/painting`);
-    const paintingJson = await paintingRes.json();
-    const paintingBase64: string = paintingJson.base64;
-
-    paintingUrl = `data:image/png;base64,${paintingBase64}`;
-  });
 </script>
 
 {#if square.walls[Direction.West]}
@@ -67,7 +57,7 @@
     width="6"
     height="6"
     position={getPositionForDirection({ x, y }, square.painting.direction, true)}
-    src={paintingUrl}
+    src={square.painting.imageUrl}
     rotation={getRotationForDirection(square.painting.direction)}
   />
 {/if}
