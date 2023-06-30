@@ -14,7 +14,9 @@ export async function POST({ platform }) {
     if (paintings.objects.length) {
       return json({
         success: true,
-        images: paintings.objects.map((object) => `${IMAGES_HOST}/${object.key}`),
+        images: paintings.objects
+          .filter((object) => object.key.endsWith("png"))
+          .map((object) => `${IMAGES_HOST}/${object.key}`),
       });
     }
 
