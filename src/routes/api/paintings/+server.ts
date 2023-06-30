@@ -1,6 +1,7 @@
 import { json } from "@sveltejs/kit";
 import dayjs from "dayjs";
 import { getImages } from "./getImages.js";
+import { v4 } from "uuid";
 
 export async function POST({ platform }) {
   const date = dayjs().format("MM-DD-HH");
@@ -19,9 +20,7 @@ export async function POST({ platform }) {
     const images = await getImages(1);
 
     await Promise.all(
-      images.map((image) =>
-        imageBucket.put(`paintings/${date}/${imageBucket.newUniqueId()}.png`, image)
-      )
+      images.map((image) => imageBucket.put(`paintings/${date}/${v4()}.png`, image))
     );
   } catch (e) {
     console.error(e);

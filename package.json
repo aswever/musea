@@ -16,7 +16,8 @@
   "dependencies": {
     "aframe": "^1.4.2",
     "aframe-extras": "^7.0.0",
-    "dayjs": "^1.11.8"
+    "dayjs": "^1.11.8",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230518.0",
@@ -25,6 +26,7 @@
     "@sveltejs/adapter-cloudflare": "^2.3.0",
     "@sveltejs/kit": "^1.5.0",
     "@types/aframe": "^1.2.2",
+    "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
     "eslint": "^8.28.0",

@@ -14,7 +14,7 @@ declare global {
     // interface PageData {}
     interface Platform {
       env?: {
-        IMAGES: DurableObjectNamespace & R2Bucket;
+        IMAGES: R2Bucket;
         MAPS: KVNamespace;
       };
     }
