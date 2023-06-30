@@ -1,4 +1,5 @@
 import { STABILITY_API_KEY, STABILITY_API_HOST, PAINTING_PROMPT } from "$env/static/private";
+import { Buffer } from "buffer";
 
 export async function getImages(count: number) {
   const engineId = "stable-diffusion-512-v2-1";
