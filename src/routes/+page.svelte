@@ -6,11 +6,11 @@
   import Room from "./Room.svelte";
   import type { Square } from "./api/map/square";
 
-  let squares: Square[] = [];
+  let map: Square[] = [];
 
   onMount(async () => {
     const res = await fetch("/api/map");
-    squares = await res.json();
+    ({ map } = await res.json());
   });
 </script>
 
@@ -31,7 +31,7 @@
       </a-entity>
     </a-entity>
     <a-sky src="/sky.png" />
-    {#each squares as square}
+    {#each map as square}
       <Room {square} />
     {/each}
   </a-scene>
