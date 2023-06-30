@@ -1,8 +1,10 @@
 import { STABILITY_API_KEY, STABILITY_API_HOST, PAINTING_PROMPT } from "$env/static/private";
+import type { R2Bucket } from "@cloudflare/workers-types";
 import { Buffer } from "buffer";
 import { v4 } from "uuid";
+import { IMAGES_HOST } from "$env/static/private";
 
-export async function getImages(count: number) {
+export async function getImages(count: number, imageBucket: R2Bucket, date: string) {
   const engineId = "stable-diffusion-512-v2-1";
   const apiHost = STABILITY_API_HOST;
   const apiKey = STABILITY_API_KEY;
@@ -44,8 +46,14 @@ export async function getImages(count: number) {
   }
 
   const responseJSON = (await response.json()) as GenerationResponse;
-  return responseJSON.artifacts.map((artifact) => ({
-    uuid: v4(),
-    image: Buffer.from(artifact.base64, "base64"),
-  }));
+  return Promise.all(
+    responseJSON.artifacts.map(async (artifact) => {
+      const uuid = v4();
+      const image = Buffer.from(artifact.base64, "base64");
+      const imageKey = `paintings/${date}/${uuid}.png`;
+      await imageBucket.put(imageKey, image);
+      const imageUrl = `${IMAGES_HOST}/${imageKey}`;
+      return { uuid, imageUrl };
+    })
+  );
 }

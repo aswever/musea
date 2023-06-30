@@ -4,9 +4,11 @@ import dayjs from "dayjs";
 
 export async function GET({ platform }) {
   const date = dayjs().format("YYYY-MM-DD-HH");
+  const imageBucket = platform?.env?.IMAGES;
   const mapsKv = platform?.env?.MAPS;
   const mapKey = `maps/${date}`;
 
+  if (!imageBucket) throw new Error("Missing image bucket.");
   if (!mapsKv) throw new Error("Missing maps KV.");
 
   const mapRecord = await mapsKv.get(mapKey);
@@ -19,7 +21,8 @@ export async function GET({ platform }) {
     })
   );
 
-  const layout = await Layout.generateLayout(5, 5);
+  const layout = Layout.generateLayout(5, 5);
+  await layout.generatePaintings(imageBucket, date);
 
   // save to KV
   mapsKv.put(

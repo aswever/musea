@@ -1,6 +1,8 @@
 import { allDirections, getOppositeDirection } from "./directions";
 import { Direction, type Location } from "./types";
 import { Square, type Painting } from "./square";
+import type { R2Bucket } from "@cloudflare/workers-types";
+import { getImages } from "../paintings/getImages";
 
 export class Layout {
   public map: Square[][];
@@ -83,24 +85,15 @@ export class Layout {
     );
   }
 
-  private async generatePaintings(): Promise<void> {
+  public async generatePaintings(imageBucket: R2Bucket, date: string): Promise<void> {
     const paintings = this.listSquares()
       .filter((square) => square.painting !== null)
       .map((square) => square.painting as Painting);
-    const paintingsResponse = await fetch("/api/paintings", {
-      body: JSON.stringify({ count: paintings.length }),
-      method: "POST",
-    });
 
-    const { success, images } = (await paintingsResponse.json()) as {
-      success: boolean;
-      images: string[];
-    };
+    const images = await getImages(paintings.length, imageBucket, date);
 
-    if (success) {
-      images.forEach((image, index) => {
-        paintings[index].imageUrl = images[index];
-      });
+    for (const index in images) {
+      paintings[index].imageUrl = images[index].imageUrl;
     }
   }
 
@@ -108,10 +101,9 @@ export class Layout {
     return this.map.flat().filter((square) => square !== null);
   }
 
-  static async generateLayout(width: number, height: number) {
+  static generateLayout(width: number, height: number) {
     const layout = new Layout(width, height);
     layout.generateMap();
-    await layout.generatePaintings();
     return layout;
   }
 }

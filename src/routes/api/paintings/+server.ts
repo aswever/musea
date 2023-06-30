@@ -23,11 +23,13 @@ export async function POST({ request, platform }) {
 
     await imageBucket.put(`paintings/${date}`, "");
 
-    const images = await getImages(count);
+    const images = await getImages(count, imageBucket, date);
 
+    /*
     await Promise.all(
       images.map(({ uuid, image }) => imageBucket.put(`paintings/${date}/${uuid}.png`, image))
     );
+    */
 
     return json({
       success: true,
