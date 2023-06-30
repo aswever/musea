@@ -4,7 +4,7 @@
 
   import { onMount } from "svelte";
   import Room from "./Room.svelte";
-  import type { Square } from "./map/square";
+  import type { Square } from "./api/map/square";
 
   let squares: Square[] = [];
 

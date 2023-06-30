@@ -1,6 +1,6 @@
 import { allDirections, getOppositeDirection } from "./directions";
 import { Direction, type Location } from "./types";
-import { Square } from "./square";
+import { Square, type Painting } from "./square";
 
 export class Layout {
   public map: Square[][];
@@ -83,13 +83,35 @@ export class Layout {
     );
   }
 
+  private async generatePaintings(): Promise<void> {
+    const paintings = this.listSquares()
+      .filter((square) => square.painting !== null)
+      .map((square) => square.painting as Painting);
+    const paintingsResponse = await fetch("/api/paintings", {
+      body: JSON.stringify({ count: paintings.length }),
+      method: "POST",
+    });
+
+    const { success, images } = (await paintingsResponse.json()) as {
+      success: boolean;
+      images: string[];
+    };
+
+    if (success) {
+      images.forEach((image, index) => {
+        paintings[index].imageUrl = images[index];
+      });
+    }
+  }
+
   public listSquares(): Square[] {
     return this.map.flat().filter((square) => square !== null);
   }
 
-  static generateLayout(width: number, height: number) {
+  static async generateLayout(width: number, height: number) {
     const layout = new Layout(width, height);
     layout.generateMap();
+    await layout.generatePaintings();
     return layout;
   }
 }

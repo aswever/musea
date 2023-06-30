@@ -1,10 +1,10 @@
 <script lang="ts">
   import "aframe";
   import "aframe-extras";
-  import { getPositionForDirection, getRotationForDirection } from "./map/directions";
+  import { getPositionForDirection, getRotationForDirection } from "./api/map/directions";
   import { onMount } from "svelte";
-  import type { Square } from "./map/square";
-  import { Direction } from "./map/types";
+  import type { Square } from "./api/map/square";
+  import { Direction } from "./api/map/types";
 
   export let square: Square;
   let [x, y] = [square.location.x * 16, square.location.y * 16];

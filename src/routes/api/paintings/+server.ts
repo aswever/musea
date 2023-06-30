@@ -3,7 +3,8 @@ import dayjs from "dayjs";
 import { getImages } from "./getImages.js";
 import { IMAGES_HOST } from "$env/static/private";
 
-export async function POST({ platform }) {
+export async function POST({ request, platform }) {
+  const { count } = await request.json();
   const date = dayjs().format("MM-DD-HH");
   const imageBucket = platform?.env?.IMAGES;
 
@@ -22,7 +23,7 @@ export async function POST({ platform }) {
 
     await imageBucket.put(`paintings/${date}`, "");
 
-    const images = await getImages(1);
+    const images = await getImages(count);
 
     await Promise.all(
       images.map(({ uuid, image }) => imageBucket.put(`paintings/${date}/${uuid}.png`, image))
