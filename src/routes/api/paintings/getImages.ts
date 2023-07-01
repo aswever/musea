@@ -1,10 +1,15 @@
-import { STABILITY_API_KEY, STABILITY_API_HOST, PAINTING_PROMPT } from "$env/static/private";
+import { STABILITY_API_KEY, STABILITY_API_HOST } from "$env/static/private";
 import type { R2Bucket } from "@cloudflare/workers-types";
 import { Buffer } from "buffer";
 import { v4 } from "uuid";
 import { IMAGES_HOST } from "$env/static/private";
 
-export async function getImages(count: number, imageBucket: R2Bucket, date: string) {
+export async function getImages(
+  count: number,
+  imageBucket: R2Bucket,
+  date: string,
+  prompt: string
+) {
   const engineId = "stable-diffusion-512-v2-1";
   const apiHost = STABILITY_API_HOST;
   const apiKey = STABILITY_API_KEY;
@@ -19,11 +24,7 @@ export async function getImages(count: number, imageBucket: R2Bucket, date: stri
       Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
-      text_prompts: [
-        {
-          text: PAINTING_PROMPT,
-        },
-      ],
+      text_prompts: [{ text: prompt }],
       cfg_scale: 7,
       clip_guidance_preset: "FAST_BLUE",
       height: 512,

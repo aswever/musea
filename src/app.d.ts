@@ -1,11 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app
 // for information about these interfaces
-import {
-  KVNamespace,
-  R2Bucket,
-  type DurableObjectNamespace,
-  type R2Bucket,
-} from "@cloudflare/workers-types";
+import { KVNamespace, R2Bucket, type R2Bucket } from "@cloudflare/workers-types";
 
 declare global {
   namespace App {

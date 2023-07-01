@@ -1,6 +1,7 @@
 import { json } from "@sveltejs/kit";
 import { Layout } from "./layout";
 import dayjs from "dayjs";
+import { MuseumGenerator } from "./museum";
 
 export async function GET({ platform }) {
   const date = dayjs().format("YYYY-MM-DD-HH");
@@ -22,13 +23,15 @@ export async function GET({ platform }) {
   );
 
   const layout = Layout.generateLayout(5, 5);
-  await layout.generatePaintings(imageBucket, date);
+  const { theme, prompt } = await new MuseumGenerator().generateMuseum();
+  await layout.generatePaintings(imageBucket, date, prompt);
 
   // save to KV
   mapsKv.put(
     mapKey,
     JSON.stringify({
       status: "complete",
+      theme,
       map: layout.listSquares(),
     })
   );

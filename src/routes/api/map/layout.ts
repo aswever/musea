@@ -85,12 +85,16 @@ export class Layout {
     );
   }
 
-  public async generatePaintings(imageBucket: R2Bucket, date: string): Promise<void> {
+  public async generatePaintings(
+    imageBucket: R2Bucket,
+    date: string,
+    prompt: string
+  ): Promise<void> {
     const paintings = this.listSquares()
       .filter((square) => square.painting !== null)
       .map((square) => square.painting as Painting);
 
-    const images = await getImages(paintings.length, imageBucket, date);
+    const images = await getImages(paintings.length, imageBucket, date, prompt);
 
     for (const index in images) {
       paintings[index].imageUrl = images[index].imageUrl;
