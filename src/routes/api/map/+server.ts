@@ -22,19 +22,32 @@ export async function GET({ platform }) {
     })
   );
 
-  const layout = Layout.generateLayout(5, 5);
-  const { theme, prompt } = await new MuseumGenerator().generateMuseum();
-  await layout.generatePaintings(imageBucket, date, prompt);
+  try {
+    const layout = Layout.generateLayout(5, 5);
+    const { theme, prompt, palette } = await new MuseumGenerator().generateMuseum();
+    await layout.generatePaintings(imageBucket, date, prompt);
 
-  // save to KV
-  mapsKv.put(
-    mapKey,
-    JSON.stringify({
-      status: "complete",
-      theme,
-      map: layout.listSquares(),
-    })
-  );
+    // save to KV
+    mapsKv.put(
+      mapKey,
+      JSON.stringify({
+        status: "complete",
+        theme,
+        prompt,
+        palette,
+        map: layout.listSquares(),
+      })
+    );
 
-  return json(layout.listSquares());
+    return json(layout.listSquares());
+  } catch (e) {
+    mapsKv.put(
+      mapKey,
+      JSON.stringify({
+        status: "error",
+        error: e instanceof Error ? e.message : e,
+      })
+    );
+    throw e;
+  }
 }

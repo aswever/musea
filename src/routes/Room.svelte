@@ -4,15 +4,17 @@
   import { getPositionForDirection, getRotationForDirection } from "./api/map/directions";
   import type { Square } from "./api/map/square";
   import { Direction } from "./api/map/types";
+  import type { Palette } from "./api/map/museum";
 
   export let square: Square;
+  export let palette: Palette;
   let [x, y] = [square.location.x * 16, square.location.y * 16];
 </script>
 
 {#if square.walls[Direction.West]}
   <a-entity
     geometry="primitive: box; width: 1; depth: 16; height: 16"
-    material="color: #160626"
+    material="color: {palette.dark}"
     position="{x - 7.5} 3 {y}"
     rotation="0 0 0"
   />
@@ -21,7 +23,7 @@
 {#if square.walls[Direction.East]}
   <a-entity
     geometry="primitive: box; width: 1; depth: 16; height: 16"
-    material="color: #160626"
+    material="color: {palette.dark}"
     position="{x + 7.5} 3 {y}"
     rotation="0 0 0"
   />
@@ -30,7 +32,7 @@
 {#if square.walls[Direction.South]}
   <a-entity
     geometry="primitive: box; width: 1; depth: 16; height: 16"
-    material="color: #160626"
+    material="color: {palette.dark}"
     position="{x} 3 {y + 7.5}"
     rotation="0 90 0"
   />
@@ -39,7 +41,7 @@
 {#if square.walls[Direction.North]}
   <a-entity
     geometry="primitive: box; width: 1; depth: 16; height: 16"
-    material="color: #160626"
+    material="color: {palette.dark}"
     position="{x} 3 {y - 7.5}"
     rotation="0 90 0"
   />
@@ -64,14 +66,14 @@
 
 <a-entity
   geometry="primitive: box; width: 1; depth: 16; height: 16"
-  material="color: #224"
+  material="color: {palette.medium}"
   position="{x} 11 {y}"
   rotation="0 0 90"
 />
 
 <a-entity
   geometry="primitive: box; width: 1; depth: 16; height: 16"
-  material="color: #bbd"
+  material="color: {palette.light}"
   position="{x} -5 {y}"
   rotation="0 0 90"
 />

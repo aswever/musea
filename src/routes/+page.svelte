@@ -5,12 +5,14 @@
   import { onMount } from "svelte";
   import Room from "./Room.svelte";
   import type { Square } from "./api/map/square";
+  import type { Palette } from "./api/map/museum";
 
   let map: Square[] = [];
+  let palette: Palette;
 
   onMount(async () => {
     const res = await fetch("/api/map");
-    ({ map } = await res.json());
+    ({ map, palette } = await res.json());
   });
 </script>
 
@@ -32,7 +34,7 @@
     </a-entity>
     <a-sky src="/sky.png" />
     {#each map as square}
-      <Room {square} />
+      <Room {square} {palette} />
     {/each}
   </a-scene>
 </div>
