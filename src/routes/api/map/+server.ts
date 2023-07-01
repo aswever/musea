@@ -23,23 +23,21 @@ export async function GET({ platform }) {
   );
 
   try {
-    const layout = Layout.generateLayout(5, 5);
     const { theme, prompt, palette } = await new MuseumGenerator().generateMuseum();
+    const layout = Layout.generateLayout(5, 5);
     await layout.generatePaintings(imageBucket, date, prompt);
 
-    // save to KV
+    const museum = { theme, prompt, palette, map: layout.listSquares() };
+
     mapsKv.put(
       mapKey,
       JSON.stringify({
         status: "complete",
-        theme,
-        prompt,
-        palette,
-        map: layout.listSquares(),
+        ...museum,
       })
     );
 
-    return json(layout.listSquares());
+    return json(museum);
   } catch (e) {
     mapsKv.put(
       mapKey,

@@ -10,7 +10,7 @@ export async function getImages(
   date: string,
   prompt: string
 ) {
-  const engineId = "stable-diffusion-512-v2-1";
+  const engineId = "stable-diffusion-xl-beta-v2-2-2";
   const apiHost = STABILITY_API_HOST;
   const apiKey = STABILITY_API_KEY;
   if (!apiKey) throw new Error("Missing Stability API key.");
@@ -30,7 +30,7 @@ export async function getImages(
       height: 512,
       width: 512,
       samples: count,
-      steps: 20,
+      steps: 40,
     }),
   });
 
