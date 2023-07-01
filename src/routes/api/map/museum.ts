@@ -35,6 +35,9 @@ export class MuseumGenerator {
   constructor() {
     this.openai = new OpenAIClient({
       apiKey: OPENAI_API_KEY,
+      fetchOptions: {
+        credentials: undefined,
+      },
     });
   }
 
