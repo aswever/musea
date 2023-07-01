@@ -17,7 +17,7 @@
     "aframe": "^1.4.2",
     "aframe-extras": "^7.0.0",
     "dayjs": "^1.11.8",
-    "openai": "^3.3.0",
+    "openai-fetch": "^1.6.3",
     "uuid": "^9.0.0"
   },
   "devDependencies": {

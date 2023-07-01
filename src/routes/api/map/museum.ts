@@ -1,9 +1,4 @@
-import {
-  Configuration,
-  OpenAIApi,
-  type ChatCompletionRequestMessage,
-  type ChatCompletionFunctions,
-} from "openai";
+import { OpenAIClient, type ChatMessageFunction, type ChatMessage } from "openai-fetch";
 import { OPENAI_API_KEY } from "$env/static/private";
 
 const systemPrompt = `Welcome to the Museum of Generative Art! We're using AI to generate paintings for our museum. We'll start by generating a museum and then we'll generate paintings for it.`;
@@ -35,18 +30,16 @@ const museumFunction = {
 };
 
 export class MuseumGenerator {
-  private openai: OpenAIApi;
+  private openai: OpenAIClient;
 
   constructor() {
-    this.openai = new OpenAIApi(
-      new Configuration({
-        apiKey: OPENAI_API_KEY,
-      })
-    );
+    this.openai = new OpenAIClient({
+      apiKey: OPENAI_API_KEY,
+    });
   }
 
   async generateMuseum(): Promise<{ theme: string; prompt: string }> {
-    const messages: ChatCompletionRequestMessage[] = [
+    const messages: ChatMessage[] = [
       { role: "system", content: systemPrompt },
       { role: "user", content: museumPrompt },
     ];
@@ -54,8 +47,8 @@ export class MuseumGenerator {
   }
 
   async generate<T = Record<string, unknown>>(
-    messages: ChatCompletionRequestMessage[],
-    functions?: ChatCompletionFunctions[]
+    messages: ChatMessage[],
+    functions?: ChatMessageFunction[]
   ): Promise<T> {
     let retryCount = 0;
     const maxRetries = 2;
@@ -64,7 +57,7 @@ export class MuseumGenerator {
     const maxTokens = 1000;
 
     while (retryCount <= maxRetries) {
-      const response = await this.openai.createChatCompletion({
+      const completion = await this.openai.createChatCompletion({
         model,
         temperature: temperature,
         max_tokens: maxTokens,
@@ -73,12 +66,12 @@ export class MuseumGenerator {
         function_call: "auto",
       });
 
-      const functionCall = response.data.choices[0].message?.function_call?.arguments;
+      const functionCall = completion.message?.function_call?.arguments;
       try {
         if (!functionCall) throw new Error("No function call");
         return JSON.parse(functionCall);
       } catch (error) {
-        console.error("Failed on message", response.data.choices[0].message);
+        console.error("Failed on message", completion.message);
         retryCount++;
         if (retryCount === maxRetries) {
           model = "gpt-4-0613";
