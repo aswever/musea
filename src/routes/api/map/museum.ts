@@ -8,7 +8,7 @@ Example themes: portrait of a cat, skyline of an alien city, scene of a piano pl
 Example artists: Pablo Picasso, Zdzislaw Beksinski, M.C. Escher
 Example twists: in a vividly colorful style, in the year 3900, in a dark living forest
 Here's an example prompt: impressionistic close-up portrait of an otter, colorful geometric background, painting by jim woodring
-Choose a color palette for a museum following the theme. Use hex strings like "#000000". Return three colors: one lighter, one medium, and one darker.
+Choose a color palette for a museum following the theme. Use hex strings like "#000000". Return three colors: one lighter, one medium, and one darker. These are for the walls, floor, and ceiling, and shouldn't be overly saturated.
 Call the generateMuseum function to generate the contents of our museum.`;
 
 const museumFunction = {
