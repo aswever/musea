@@ -3,16 +3,18 @@
   import "aframe-extras";
 
   import { onMount } from "svelte";
-  import Room from "./Room.svelte";
-  import type { Square } from "./api/map/square";
-  import type { Palette } from "./api/map/museum";
+  import RoomComponent from "./Room.svelte";
+  import type { Room } from "$lib/shared/museum/room";
+  import type { Museum, MuseumPalette } from "$lib/shared/types";
 
-  let map: Square[] = [];
-  let palette: Palette;
+  let rooms: Room[] = [];
+  let palette: MuseumPalette;
 
   onMount(async () => {
-    const res = await fetch("/api/map");
-    ({ map, palette } = await res.json());
+    const res = await fetch("/api/museum");
+    const museum: Museum = await res.json();
+    palette = museum.params.palette;
+    rooms = museum.grid.flat();
   });
 </script>
 
@@ -22,19 +24,23 @@
 
 <div>
   <a-scene physics="gravity: 0">
-    <a-entity track-position movement-controls="constrainToNavMesh: true; speed: 0.6">
-      <a-entity camera look-controls kinematic-body collider>
+    <a-entity position="0 0 0" id="pov">
+      <a-camera
+        position="0 0 0"
+        movement-controls="controls: checkpoint"
+        checkpoint-controls="mode: animate"
+      >
         <a-entity
           cursor
           position="0 0 -1"
-          geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-          material="color: black; shader: flat"
-        />
-      </a-entity>
+          geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03;"
+          material="color: #CCC; shader: flat;"
+        /></a-camera
+      >
     </a-entity>
     <a-sky src="/sky.png" />
-    {#each map as square}
-      <Room {square} {palette} />
+    {#each rooms as room}
+      <RoomComponent {room} {palette} />
     {/each}
   </a-scene>
 </div>

@@ -1,4 +1,11 @@
-import { Direction, type Location } from "./types";
+import type { Location } from "../types";
+
+export enum Direction {
+  North,
+  East,
+  South,
+  West,
+}
 
 export const allDirections = [Direction.North, Direction.East, Direction.South, Direction.West];
 

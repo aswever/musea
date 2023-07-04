@@ -1,12 +1,7 @@
-import { Direction, type Location, type Walls } from "./types";
-import { allDirections } from "./directions";
+import type { Location, Painting, Walls } from "../types";
+import { Direction, allDirections } from "./directions";
 
-export interface Painting {
-  direction: Direction;
-  imageUrl?: string;
-}
-
-export class Square {
+export class Room {
   public painting: Painting | null = null;
 
   constructor(
@@ -23,9 +18,9 @@ export class Square {
     this.walls[direction] = false;
   }
 
-  public addPainting() {
+  public addPainting(imageUrl: string) {
     const directions = allDirections.filter((direction) => this.walls[direction] === true);
     const direction = directions[Math.floor(Math.random() * directions.length)];
-    this.painting = { direction };
+    this.painting = { direction, imageUrl };
   }
 }

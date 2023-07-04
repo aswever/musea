@@ -1,17 +1,20 @@
 <script lang="ts">
   import "aframe";
   import "aframe-extras";
-  import { getPositionForDirection, getRotationForDirection } from "./api/map/directions";
-  import type { Square } from "./api/map/square";
-  import { Direction } from "./api/map/types";
-  import type { Palette } from "./api/map/museum";
+  import {
+    Direction,
+    getPositionForDirection,
+    getRotationForDirection,
+  } from "$lib/shared/museum/directions";
+  import type { Room } from "$lib/shared/museum/room";
+  import type { MuseumPalette } from "$lib/shared/types";
 
-  export let square: Square;
-  export let palette: Palette;
-  let [x, y] = [square.location.x * 16, square.location.y * 16];
+  export let room: Room;
+  export let palette: MuseumPalette;
+  let [x, y] = [room.location.x * 16, room.location.y * 16];
 </script>
 
-{#if square.walls[Direction.West]}
+{#if room.walls[Direction.West]}
   <a-entity
     geometry="primitive: box; width: 1; depth: 16; height: 16"
     material="color: {palette.dark}"
@@ -20,7 +23,7 @@
   />
 {/if}
 
-{#if square.walls[Direction.East]}
+{#if room.walls[Direction.East]}
   <a-entity
     geometry="primitive: box; width: 1; depth: 16; height: 16"
     material="color: {palette.dark}"
@@ -29,7 +32,7 @@
   />
 {/if}
 
-{#if square.walls[Direction.South]}
+{#if room.walls[Direction.South]}
   <a-entity
     geometry="primitive: box; width: 1; depth: 16; height: 16"
     material="color: {palette.dark}"
@@ -38,7 +41,7 @@
   />
 {/if}
 
-{#if square.walls[Direction.North]}
+{#if room.walls[Direction.North]}
   <a-entity
     geometry="primitive: box; width: 1; depth: 16; height: 16"
     material="color: {palette.dark}"
@@ -47,20 +50,20 @@
   />
 {/if}
 
-{#if square.painting}
+{#if room.painting}
   <a-entity
     geometry="primitive: box; width: 6.5; depth: 0.2; height: 6.5"
     material="color: #111"
-    position={getPositionForDirection({ x, y }, square.painting.direction)}
-    rotation={getRotationForDirection(square.painting.direction)}
+    position={getPositionForDirection({ x, y }, room.painting.direction)}
+    rotation={getRotationForDirection(room.painting.direction)}
   />
 
   <a-image
     width="6"
     height="6"
-    position={getPositionForDirection({ x, y }, square.painting.direction, true)}
-    src={square.painting.imageUrl}
-    rotation={getRotationForDirection(square.painting.direction)}
+    position={getPositionForDirection({ x, y }, room.painting.direction, true)}
+    src={room.painting.imageUrl}
+    rotation={getRotationForDirection(room.painting.direction)}
   />
 {/if}
 
@@ -76,4 +79,5 @@
   material="color: {palette.light}"
   position="{x} -5 {y}"
   rotation="0 0 90"
+  checkpoint
 />
