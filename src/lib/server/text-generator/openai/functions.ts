@@ -28,8 +28,9 @@ export const museumFunction = {
             description: "dark color",
           },
         },
+        required: ["light", "medium", "dark"],
       },
     },
-    required: ["theme", "prompt"],
+    required: ["theme", "prompt", "palette"],
   },
 };
