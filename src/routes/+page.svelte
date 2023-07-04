@@ -6,7 +6,7 @@
   let museum: Museum;
 
   onMount(async () => {
-    const res = await fetch("https://dreamtunnel.org/api/museum");
+    const res = await fetch("/api/museum");
     museum = await res.json();
   });
 </script>
