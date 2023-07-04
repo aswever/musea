@@ -14,7 +14,7 @@
     const res = await fetch("/api/museum");
     const museum: Museum = await res.json();
     palette = museum.params.palette;
-    rooms = museum.grid.flat();
+    rooms = museum.grid.flat().filter((room) => room);
   });
 </script>
 
