@@ -1,8 +1,6 @@
 import { Direction, allDirections, getOppositeDirection } from "./directions";
 import { Room } from "./room";
-import type { Location } from "$lib/shared/types";
-
-export type LayoutGrid = Room[][];
+import type { LayoutGrid, Location } from "$lib/shared/types";
 
 export class Layout {
   public grid: LayoutGrid;

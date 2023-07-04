@@ -1,5 +1,7 @@
 import type { Direction } from "./museum/directions";
-import type { LayoutGrid } from "./museum/layout";
+import type { Room } from "./museum/room";
+
+export type LayoutGrid = (Room | null)[][];
 
 export interface MuseumPalette {
   light: string;
